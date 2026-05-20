@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Fake News Detector</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -13,37 +13,36 @@
 
 <div class="container">
 
-    <div class="glass-card">
+    <div class="glass-card">
 
-        <div class="logo">🧠 AI Detector</div>
+        <div class="logo">🧠 AI Detector</div>
 
-        <h1>Fake News Detection System</h1>
-        <p class="subtitle">Powered by Machine Learning</p>
+        <h1>Fake News Detection System</h1>
+        <p class="subtitle">Powered by Machine Learning</p>
 
-        <form action="/predict" method="POST" onsubmit="handleSubmit(this)">
-            <textarea name="news" placeholder="Paste your news article here..." maxlength="5000" required>{{ old_text if old_text else '' }}</textarea>
+        <form action="/predict" method="POST" onsubmit="handleSubmit(this)">
+            <textarea name="news" placeholder="Paste your news article here..." maxlength="5000" required>{{ old_text if old_text else '' }}</textarea>
+            <button type="submit" id="submit-btn">Analyze Now</button>
+        </form>
 
-            <button type="submit" id="submit-btn">Analyze Now</button>
-        </form>
+        {% if prediction %}
+        <div class="result-box {{ result_class }}">
+            {{ prediction }}
+        </div>
+        {% endif %}
 
-        {% if prediction %}
-        <div class="result-box {{ result_class }}">
-            {{ prediction }}
-        </div>
-        {% endif %}
-
-    </div>
+    </div>
 
 </div>
 
 <script>
 function handleSubmit(form) {
-    const btn = document.getElementById('submit-btn');
-    btn.innerText = 'Analyzing...';
-    btn.style.opacity = '0.7';
-    btn.style.pointerEvents = 'none';
+    const btn = document.getElementById('submit-btn');
+    btn.innerText = 'Analyzing Text...';
+    btn.style.opacity = '0.7';
+    btn.style.pointerEvents = 'none';
 }
 </script>
 
 </body>
-</html> kardo edit
+</html>

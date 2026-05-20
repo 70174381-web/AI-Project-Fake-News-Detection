@@ -7,11 +7,11 @@
 
 body {
     height: 100vh;
-    overflow-y: auto; /* Fixed: Prevents content clipping on smaller screens */
+    overflow-y: auto;
     background: #0f2027; 
 }
 
-/* Animated background */
+/* Animated glass background */
 .background {
     position: fixed;
     top: 0;
@@ -30,7 +30,7 @@ body {
     100% {background-position: 0% 50%;}
 }
 
-/* Center container */
+/* Flex layout centering */
 .container {
     min-height: 100vh;
     display: flex;
@@ -39,10 +39,10 @@ body {
     padding: 20px;
 }
 
-/* Glass card */
+/* Glassmorphism Card Structure */
 .glass-card {
     width: 100%;
-    max-width: 480px; /* Responsive default */
+    max-width: 480px;
     padding: 35px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.08);
@@ -53,7 +53,6 @@ body {
     color: white;
 }
 
-/* Logo */
 .logo {
     font-size: 14px;
     letter-spacing: 2px;
@@ -61,7 +60,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Heading */
 h1 {
     font-size: 26px;
     margin-bottom: 8px;
@@ -73,7 +71,6 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Textarea */
 textarea {
     width: 100%;
     height: 160px;
@@ -94,10 +91,9 @@ textarea:focus {
 }
 
 textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5); /* Improved placeholder contrast */
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* Button */
 button {
     width: 100%;
     margin-top: 15px;
@@ -117,7 +113,7 @@ button:hover {
     box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
 }
 
-/* Result box base style */
+/* Result box dynamic wrapper layout */
 .result-box {
     margin-top: 20px;
     padding: 14px;
@@ -127,7 +123,7 @@ button:hover {
     animation: fadeIn 0.5s ease;
 }
 
-/* Dynamic Alert Colors */
+/* Dynamic Classes generated from Flask backend mapping */
 .result-box.success {
     background: rgba(0, 255, 150, 0.15);
     border: 1px solid rgba(0, 255, 150, 0.4);
@@ -151,7 +147,7 @@ button:hover {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Styles for Mobile Phones */
+/* Media Query breakpoints for responsiveness */
 @media (max-width: 480px) {
     .glass-card {
         padding: 25px 20px;

@@ -4,16 +4,26 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Load model + vectorizer safely
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+vectorizer_path = os.path.join(BASE_DIR, "tfidf_vectorizer.pkl")
+model_path = os.path.join(BASE_DIR, "model_lr.pkl")
+
+# Strict Loading Mode - Loading your newly generated clean files
 try:
-    model = pickle.load(open("model.pkl", "rb"))
-    vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-except FileNotFoundError:
-    print(
-        "Error: 'model.pkl' or 'vectorizer.pkl' not found. Please check your file paths."
-    )
-    model = None
+    with open(vectorizer_path, "rb") as f:
+        vectorizer = pickle.load(f)
+
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+
+    print("✅ System Status: Model and Vectorizer loaded successfully!")
+    is_model_ready = True
+except Exception as e:
+    print(f"❌ System Status: Error loading model files. Details: {e}")
     vectorizer = None
+    model = None
+    is_model_ready = False
 
 
 @app.route("/")
@@ -23,16 +33,8 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    if not model or not vectorizer:
-        return render_template(
-            "index.html",
-            prediction="Model configuration error.",
-            result_class="danger",
-        )
-
     news = request.form.get("news", "").strip()
 
-    # 1. Input Validation
     if not news:
         return render_template(
             "index.html",
@@ -40,26 +42,34 @@ def predict():
             result_class="warning",
         )
 
-    # Convert text to numbers
-    data = vectorizer.transform([news])
+    if not is_model_ready:
+        return render_template(
+            "index.html",
+            prediction="❌ System Error: Machine Learning model files are missing or corrupted.",
+            result_class="danger",
+            old_text=news,
+        )
 
-    # Prediction
-    prediction = model.predict(data)[0]
+    try:
+        data = vectorizer.transform([news])
+        prediction = model.predict(data)[0]
 
-    # 2. Confidence Score Logic (if supported by your model)
-    confidence_text = ""
-    if hasattr(model, "predict_proba"):
-        probabilities = model.predict_proba(data)[0]
-        confidence = probabilities[prediction] * 100
-        confidence_text = f" ({confidence:.1f}% Confidence)"
+        confidence_text = ""
+        if hasattr(model, "predict_proba"):
+            probabilities = model.predict_proba(data)[0]
+            confidence = probabilities[prediction] * 100
+            confidence_text = f" ({confidence:.1f}% Confidence)"
 
-    # 3. Dynamic Result & CSS Class Logic
-    if prediction == 1:
-        result = f"Fake News ❌{confidence_text}"
+        if prediction == 1:
+            result = f"Fake News ❌{confidence_text}"
+            result_class = "danger"
+        else:
+            result = f"Real News ✅{confidence_text}"
+            result_class = "success"
+
+    except Exception as e:
+        result = f"❌ Prediction Error: {e}"
         result_class = "danger"
-    else:
-        result = f"Real News ✅{confidence_text}"
-        result_class = "success"
 
     return render_template(
         "index.html", prediction=result, result_class=result_class, old_text=news
@@ -67,6 +77,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    # debug mode controlled via environment variable safely
-    is_debug = os.getenv("FLASK_DEBUG", "true").lower() == "true"
-    app.run(debug=is_debug)
+    app.run(debug=True)
