@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <div class="glass-card">
+
+        <div class="logo">🧠 AI Detector</div>
+
+        <h1>Fake News Detection System</h1>
+        <p class="subtitle">Powered by Machine Learning</p>
+
+        <form action="/predict" method="POST">
+            <textarea name="news" placeholder="Paste your news article here..."></textarea>
+
+            <button type="submit">Analyze Now</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result-box">
+            {{ prediction }}
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
